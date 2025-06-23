@@ -1,0 +1,17 @@
+- name: Save mlruns to repo
+  run: |
+    git config --global user.name "${{ secrets.username }}"
+    git config --global user.email "${{ secrets.email }}"
+
+    if [ -d "mlruns" ] && [ "$(ls -A mlruns)" ]; then
+      git add mlruns/
+      # Cek apakah ada perubahan yang akan dikomit
+      if ! git diff --cached --quiet; then
+        git commit -m "Save mlruns from CI run"
+        git push origin main
+      else
+        echo "No changes to commit."
+      fi
+    else
+      echo "No mlruns directory to commit."
+    fi
