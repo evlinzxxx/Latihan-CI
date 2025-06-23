@@ -1,5 +1,5 @@
 name: CI
- 
+
 on:
   push:
     branches:
@@ -7,45 +7,45 @@ on:
   pull_request:
     branches:
       - main
- 
+
 env:
   CSV_URL: "MLproject/train_pca.csv"
- 
+
 jobs:
   build:
     runs-on: ubuntu-latest
- 
+
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE
       - uses: actions/checkout@v3
- 
-      # Setup Python 3.10.11
+
       - name: Set up Python 3.10.11
         uses: actions/setup-python@v4
         with:
           python-version: "3.10.11"
-      
-      # Check Env Variables
-      - name: Check Env
-        run: |
-          echo $CSV_URL
- 
-      # Install mlflow
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install mlflow
-      
-      # Run as a mlflow project
+          pip install mlflow scikit-learn pandas
+
       - name: Run mlflow project
         run: |
-          mlflow run MLproject --env-manager=local 
- 
-      # Save models to GitHub Repository
+          mlflow run MLproject --env-manager=local
+
       - name: Save mlruns to repo
         run: |
-          git config --global user.name ${{ secrets.username }}
-          git config --global user.email ${{ secrets.email }}
-          git add mlruns/
-          git commit -m "Save mlruns from CI run"
-          git push origin main
+          git config --global user.name "${{ secrets.username }}"
+          git config --global user.email "${{ secrets.email }}"
+
+          if [ -d "mlruns" ] && [ "$(ls -A mlruns)" ]; then
+            git add mlruns/
+
+            if ! git diff --cached --quiet; then
+              git commit -m "Save mlruns from CI run"
+              git push origin main
+            else
+              echo "No changes to commit."
+            fi
+          else
+            echo "No mlruns directory to commit."
+          fi
