@@ -33,11 +33,10 @@ if __name__ == "__main__":
         predicted_qualities = model.predict(X_test)
 
         mlflow.sklearn.log_model(
-            sk_model=model,
-            artifact_path="model",
-            registered_model_name=None
+        sk_model=model,
+        artifact_path="model",
+        input_example=input_example
         )
-
         model.fit(X_train, y_train)
         # Log metrics
         accuracy = model.score(X_test, y_test)
