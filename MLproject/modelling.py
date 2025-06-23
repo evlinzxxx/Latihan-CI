@@ -32,9 +32,9 @@ if __name__ == "__main__":
 
         predicted_qualities = model.predict(X_test)
 
-        mlflow.sklearn.log_model(
+        mlflow.sklearn.save_model(
         sk_model=model,
-        artifact_path="model",
+        path="model",
         input_example=input_example
         )
         model.fit(X_train, y_train)
