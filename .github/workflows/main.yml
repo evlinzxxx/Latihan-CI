@@ -49,11 +49,11 @@ jobs:
           git add mlruns/
 
           if ! git diff --cached --quiet; then
-          git commit -m "Save mlruns from CI run"
-          git push origin main
+            git commit -m "Save mlruns from CI run"
+            git push origin main
           else
-          echo "No changes to commit."
+            echo "No changes to commit."
           fi
           else
-            echo "No mlruns directory to commit."
+          echo "No mlruns directory to commit."
           fi
