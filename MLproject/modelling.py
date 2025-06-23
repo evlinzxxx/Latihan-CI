@@ -23,6 +23,7 @@ if __name__ == "__main__":
     random_state=42,
     test_size=0.2
     )
+    input_example = X_train[0:5]
     n_estimators = int(sys.argv[1]) if len(sys.argv) > 1 else 505
     max_depth = int(sys.argv[2]) if len(sys.argv) > 2 else 37
     with mlflow.start_run():
@@ -34,7 +35,9 @@ if __name__ == "__main__":
         mlflow.sklearn.log_model(
             sk_model=model,
             artifact_path="model",
+            registered_model_name=None
         )
+
         model.fit(X_train, y_train)
         # Log metrics
         accuracy = model.score(X_test, y_test)
